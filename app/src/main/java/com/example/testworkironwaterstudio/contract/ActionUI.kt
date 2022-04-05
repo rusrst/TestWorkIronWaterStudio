@@ -1,5 +1,5 @@
 package com.example.testworkironwaterstudio.contract
 
-interface HasCustomTitle {
-    fun getTitle(): String
+interface ActionUI {
+    fun updateUi()
 }
