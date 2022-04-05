@@ -5,8 +5,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Lifecycle
+import com.example.testworkironwaterstudio.contract.ARG_STARTUP
 import com.example.testworkironwaterstudio.contract.Navigator
 import com.example.testworkironwaterstudio.databinding.ActivityMainBinding
+import java.io.Serializable
 
 class MainActivity : AppCompatActivity(), Navigator {
 
@@ -32,7 +35,54 @@ class MainActivity : AppCompatActivity(), Navigator {
         setSupportActionBar(toolbar)
     }
 
+    override fun onResume() {
+        super.onResume()
+        actions.forEach { it() }
+        actions.clear()
+    }
+
+    override fun onDestroy() {
+        supportFragmentManager.unregisterFragmentLifecycleCallbacks(fragmentListener)
+        super.onDestroy()
+    }
+
+    private fun runWhenActive(action: () -> Unit) {
+        if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
+            // activity is active -> just execute the action
+            action()
+        } else {
+            // activity is not active -> add action to queue
+            actions += action
+        }
+    }
+
     private fun updateUi() {
+        if (supportFragmentManager.backStackEntryCount > 0) {
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            supportActionBar?.setDisplayShowHomeEnabled(true)
+        }
+        else{
+            supportActionBar?.setDisplayHomeAsUpEnabled(false)
+            supportActionBar?.setDisplayShowHomeEnabled(false)
+        }
+    }
+
+    private fun launchFragment(fragment: Fragment, addToBackStack: Boolean = false, result: Any? = null, tag: String? = null){
+        runWhenActive {
+            val bundle = Bundle()
+            if (result != null){
+                bundle.putSerializable(ARG_STARTUP, result as Serializable) // WARNING, THIS CODE MUST BE SERIALIZABLE
+            }
+            fragment.arguments = bundle
+            val transaction = supportFragmentManager.beginTransaction()
+            if (addToBackStack) transaction.addToBackStack(null)
+            transaction
+                .replace(idContainer, fragment, tag)
+                .commit()
+        }
+    }
+
+    private fun toMoveListItem(){
         TODO("Not yet implemented")
     }
 
@@ -44,7 +94,7 @@ class MainActivity : AppCompatActivity(), Navigator {
         TODO("Not yet implemented")
     }
 
-    override fun toBack() {
-        TODO("Not yet implemented")
+    override fun toBack(){
+        supportFragmentManager.popBackStack()
     }
 }
