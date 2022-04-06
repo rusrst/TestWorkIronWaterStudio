@@ -2,17 +2,21 @@ package com.example.testworkironwaterstudio
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.Gravity
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import android.widget.PopupMenu
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
-import com.example.testworkironwaterstudio.contract.ARG_STARTUP
-import com.example.testworkironwaterstudio.contract.ActionUI
-import com.example.testworkironwaterstudio.contract.HasCustomTitle
-import com.example.testworkironwaterstudio.contract.Navigator
+import com.example.testworkironwaterstudio.contract.*
 import com.example.testworkironwaterstudio.databinding.ActivityMainBinding
 import com.example.testworkironwaterstudio.fragments.FilmsFragment
 import java.io.Serializable
+import java.lang.IllegalArgumentException
 
 class MainActivity : AppCompatActivity(), Navigator, ActionUI {
 
@@ -32,8 +36,6 @@ class MainActivity : AppCompatActivity(), Navigator, ActionUI {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentListener, false)
-        val toolbar = binding.toolbar
-        setSupportActionBar(toolbar)
         if (savedInstanceState == null) toMoveListItem()
     }
 
@@ -61,27 +63,37 @@ class MainActivity : AppCompatActivity(), Navigator, ActionUI {
     override fun updateUi() {
         val currentFragment = supportFragmentManager.findFragmentById(idContainer)!!
         if (supportFragmentManager.backStackEntryCount > 0) {
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            supportActionBar?.setDisplayShowHomeEnabled(true)
+            binding.toolbar.setNavigationIcon(R.drawable.ic_arrow_left)
+            binding.toolbar.setNavigationOnClickListener {
+                toBack()
+            }
         }
-        else{
-            supportActionBar?.setDisplayHomeAsUpEnabled(false)
-            supportActionBar?.setDisplayShowHomeEnabled(false)
+        if (currentFragment is HasCustomTitle) binding.toolbar.title = currentFragment.getTitle()
+        if (currentFragment is HasInfoButton){
+
+            binding.toolbar.menu.clear()
+            binding.toolbar.inflateMenu(R.menu.about_menu)
+            val menuItem = binding.toolbar.menu.findItem(R.id.aboutMenu)
+            menuItem.setOnMenuItemClickListener {
+
+                return@setOnMenuItemClickListener true
+            }
+        } else {
+            binding.toolbar.menu.clear()
         }
-        if (currentFragment is HasCustomTitle) supportActionBar?.title = currentFragment.getTitle()
     }
 
     private fun launchFragment(fragment: Fragment, addToBackStack: Boolean = false, result: Any? = null, tag: String? = null){
-            if (result != null){
-                val bundle = Bundle()
-                bundle.putSerializable(ARG_STARTUP, result as Serializable) // WARNING, THIS CODE MUST BE SERIALIZABLE
-                fragment.arguments = bundle
-            }
-            val transaction = supportFragmentManager.beginTransaction()
-            if (addToBackStack) transaction.addToBackStack(null)
-            transaction
-                .replace(idContainer, fragment, tag)
-                .commit()
+        if (result != null){
+            val bundle = Bundle()
+            bundle.putSerializable(ARG_STARTUP, result as Serializable) // WARNING, THIS CODE MUST BE SERIALIZABLE
+            fragment.arguments = bundle
+        }
+        val transaction = supportFragmentManager.beginTransaction()
+        if (addToBackStack) transaction.addToBackStack(null)
+        transaction
+            .replace(idContainer, fragment, tag)
+            .commit()
     }
 
     private fun toMoveListItem() = launchFragment(FilmsFragment())
