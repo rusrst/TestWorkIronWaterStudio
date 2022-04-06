@@ -7,35 +7,41 @@
 
     <ImageView
         android:id="@+id/aboutImageView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/company"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logo_company"
-        android:contentDescription="@string/company"
-        app:layout_constraintDimensionRatio="1:1"/>
+        app:srcCompat="@drawable/logo_company" />
 
     <TextView
-        style="@style/TextViewRecyclerViewStyle"
         android:id="@+id/aboutTextView"
-        android:layout_width="match_parent"
+        style="@style/TextViewRecyclerViewStyle"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        android:gravity="center"
+        android:padding="15dp"
         android:text="@string/company"
         android:textColor="@color/red"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/aboutImageView"
-        android:gravity="center"
-        android:padding="15dp"/>
+        app:layout_constraintHorizontal_bias="0.448"
+        app:layout_constraintStart_toEndOf="@+id/aboutImageView"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/aboutButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/rounded_cornel"
         android:text="@string/reference"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.83"
+        app:layout_constraintStart_toStartOf="@+id/aboutImageView"
         app:layout_constraintTop_toBottomOf="@+id/aboutTextView"
-        android:background="@drawable/rounded_cornel"/>
+        app:layout_constraintVertical_bias="0.145" />
 </androidx.constraintlayout.widget.ConstraintLayout>
