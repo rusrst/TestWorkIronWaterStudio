@@ -22,6 +22,20 @@ class AboutFragment: Fragment(), HasCustomTitle {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.aboutButton.setOnClickListener {
+            showDialogBrowser()
+        }
+    }
+
+    private fun showDialogBrowser(){
+        val simpleDialog = SimpleDialogFragment()
+        val args = Bundle()
+        args.putString("text", getString(R.string.open_browser))
+        simpleDialog.arguments = args
+        simpleDialog.show(requireActivity().supportFragmentManager, SimpleDialogFragment.TAG)
+    }
+
     override fun getTitle(): String {
         return resources.getString(R.string.about)
     }

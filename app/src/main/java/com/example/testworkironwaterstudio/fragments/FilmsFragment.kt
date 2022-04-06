@@ -12,6 +12,7 @@ import com.example.testworkironwaterstudio.contract.HasCustomTitle
 import com.example.testworkironwaterstudio.contract.HasInfoButton
 import com.example.testworkironwaterstudio.contract.INPUT_DATA
 import com.example.testworkironwaterstudio.contract.updateUi
+import com.example.testworkironwaterstudio.data.FilmItem
 import com.example.testworkironwaterstudio.data.ListOfFilm
 import com.example.testworkironwaterstudio.databinding.FilmsFragmentBinding
 import kotlinx.serialization.decodeFromString
@@ -24,6 +25,12 @@ class FilmsFragment : Fragment(), HasCustomTitle, HasInfoButton {
     private val executor = Executors.newSingleThreadScheduledExecutor()
     private lateinit var binding: FilmsFragmentBinding
     private lateinit var adapter: FilmsAdapter
+    private var listOfFilms: List<FilmItem> = listOf()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        listOfFilms = (savedInstanceState?.getSerializable(INPUT_DATA) as ListOfFilm?)?.films ?: listOf()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,7 +44,7 @@ class FilmsFragment : Fragment(), HasCustomTitle, HasInfoButton {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.errorResultInclude.tryAgainButton.setOnClickListener { initFilmsList() }
-        initRecyclerView(savedInstanceState)
+        initRecyclerView()
     }
 
     override fun onDestroy() {
@@ -46,25 +53,18 @@ class FilmsFragment : Fragment(), HasCustomTitle, HasInfoButton {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        if (adapter.listOfFilms.isNotEmpty()) outState.putSerializable(INPUT_DATA, ListOfFilm(adapter.listOfFilms))
+        if (listOfFilms.isNotEmpty()) outState.putSerializable(INPUT_DATA, ListOfFilm(listOfFilms))
         super.onSaveInstanceState(outState)
     }
 
-    private fun initRecyclerView(savedInstanceState: Bundle?){
-        if (!this::adapter.isInitialized){
-            binding.recyclerViewList.layoutManager = LinearLayoutManager(requireContext())
-            adapter = FilmsAdapter()
-            binding.recyclerViewList.adapter = adapter
-            val listOfFilms = savedInstanceState?.getSerializable(INPUT_DATA) as ListOfFilm?
-            if (listOfFilms != null && listOfFilms.films.isNotEmpty()){
-                adapter.listOfFilms = listOfFilms.films
-            }
-            else initFilmsList()
+    private fun initRecyclerView(){
+        binding.recyclerViewList.layoutManager = LinearLayoutManager(requireContext())
+        adapter = FilmsAdapter()
+        binding.recyclerViewList.adapter = adapter
+        if (listOfFilms.isNotEmpty()){
+            adapter.listOfFilms = listOfFilms
         }
-        else {
-            binding.recyclerViewList.layoutManager = LinearLayoutManager(requireContext())
-            binding.recyclerViewList.adapter = adapter
-        }
+        else initFilmsList()
     }
 
     private fun initFilmsList() {
@@ -82,7 +82,8 @@ class FilmsFragment : Fragment(), HasCustomTitle, HasInfoButton {
             .use{ it?.readText()}
         Handler(Looper.getMainLooper()).post {
             if (stringOfJson != null){
-                adapter.listOfFilms = Json.decodeFromString<ListOfFilm>(stringOfJson).films
+                listOfFilms = Json.decodeFromString<ListOfFilm>(stringOfJson).films
+                adapter.listOfFilms = listOfFilms
                 binding.errorResultInclude.errorContainer.visibility = View.GONE
                 binding.recyclerViewList.visibility = View.VISIBLE
                 binding.progressBarFilmsFragment.visibility = View.GONE

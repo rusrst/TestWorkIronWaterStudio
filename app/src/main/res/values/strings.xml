@@ -5,4 +5,6 @@
     <string name="about">About the company</string>
     <string name="company">Яндекс - найдется все</string>
     <string name="reference">yandex.ru</string>
+    <string name="open_browser">Открыть сайт в браузере?</string>
+    <string name="poster">poster of films</string>
 </resources>

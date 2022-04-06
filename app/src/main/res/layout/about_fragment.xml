@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/aboutImageView"
         android:layout_width="409dp"
         android:layout_height="237dp"
         android:maxHeight="300dp"
@@ -18,24 +18,24 @@
 
     <TextView
         style="@style/TextViewRecyclerViewStyle"
-        android:id="@+id/textView"
+        android:id="@+id/aboutTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/company"
         android:textColor="@color/red"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        app:layout_constraintTop_toBottomOf="@+id/aboutImageView"
         android:gravity="center"
         android:padding="15dp"/>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/aboutButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/reference"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/aboutTextView"
         android:background="@drawable/rounded_cornel"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
