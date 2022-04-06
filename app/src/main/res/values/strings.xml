@@ -7,4 +7,5 @@
     <string name="reference">yandex.ru</string>
     <string name="open_browser">Открыть сайт в браузере?</string>
     <string name="poster">poster of films</string>
+    <string name="uri">https://yandex.ru/</string>
 </resources>
