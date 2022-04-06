@@ -20,7 +20,7 @@ class FilmsAdapter(private val navigator: Navigator): RecyclerView.Adapter<Films
         private val binding: FilmItemBinding,
         private val navigator: Navigator,
         private val listOfFilms:List<FilmItem>
-        ): RecyclerView.ViewHolder(binding.root){
+    ): RecyclerView.ViewHolder(binding.root){
         init {
             binding.itemRoot.setOnClickListener {
                 navigator.toMoveDetailsItemPage(listOfFilms[adapterPosition])

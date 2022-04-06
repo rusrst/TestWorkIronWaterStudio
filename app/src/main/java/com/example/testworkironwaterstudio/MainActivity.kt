@@ -98,11 +98,11 @@ class MainActivity : AppCompatActivity(), Navigator, ActionUI {
 
     private fun toMoveListItem() = launchFragment(FilmsFragment())
 
-    override fun toMoveInfoCompanyPage(result: Any?, addToBackStack: Boolean) = launchFragment(AboutFragment(), true)
+    override fun toMoveInfoCompanyPage(result: Any?, addToBackStack: Boolean)
+    = launchFragment(AboutFragment(), true)
 
-    override fun toMoveDetailsItemPage(result: FilmItem, addToBackStack: Boolean) = launchFragment(DetailsFragment(), true, result = result)
+    override fun toMoveDetailsItemPage(result: FilmItem, addToBackStack: Boolean)
+    = launchFragment(DetailsFragment(), true, result = result)
 
-    override fun toBack(){
-        supportFragmentManager.popBackStack()
-    }
+    override fun toBack() = supportFragmentManager.popBackStack()
 }

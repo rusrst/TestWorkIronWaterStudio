@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
+import com.example.testworkironwaterstudio.R
 
 class SimpleDialogFragment() : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -16,8 +17,8 @@ class SimpleDialogFragment() : DialogFragment() {
         }
         return AlertDialog.Builder(requireContext())
             .setCancelable(true)
-            .setPositiveButton("OK", listener)
-            .setNegativeButton("CANCEL", listener)
+            .setPositiveButton(getString(R.string.ok), listener)
+            .setNegativeButton(R.string.cancel, listener)
             .setTitle(title)
             .setMessage(text)
             .create()
