@@ -8,10 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.testworkironwaterstudio.contract.HasCustomTitle
-import com.example.testworkironwaterstudio.contract.HasInfoButton
-import com.example.testworkironwaterstudio.contract.INPUT_DATA
-import com.example.testworkironwaterstudio.contract.updateUi
+import com.example.testworkironwaterstudio.contract.*
 import com.example.testworkironwaterstudio.data.FilmItem
 import com.example.testworkironwaterstudio.data.ListOfFilm
 import com.example.testworkironwaterstudio.databinding.FilmsFragmentBinding
@@ -59,7 +56,7 @@ class FilmsFragment : Fragment(), HasCustomTitle, HasInfoButton {
 
     private fun initRecyclerView(){
         binding.recyclerViewList.layoutManager = LinearLayoutManager(requireContext())
-        adapter = FilmsAdapter()
+        adapter = FilmsAdapter(requireActivity() as Navigator)
         binding.recyclerViewList.adapter = adapter
         if (listOfFilms.isNotEmpty()){
             adapter.listOfFilms = listOfFilms

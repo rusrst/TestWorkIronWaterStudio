@@ -7,8 +7,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import com.example.testworkironwaterstudio.contract.*
+import com.example.testworkironwaterstudio.data.FilmItem
 import com.example.testworkironwaterstudio.databinding.ActivityMainBinding
 import com.example.testworkironwaterstudio.fragments.AboutFragment
+import com.example.testworkironwaterstudio.fragments.DetailsFragment
 import com.example.testworkironwaterstudio.fragments.FilmsFragment
 import java.io.Serializable
 
@@ -98,9 +100,7 @@ class MainActivity : AppCompatActivity(), Navigator, ActionUI {
 
     override fun toMoveInfoCompanyPage(result: Any?, addToBackStack: Boolean) = launchFragment(AboutFragment(), true)
 
-    override fun toMoveDetailsItemPage(result: Any?, addToBackStack: Boolean) {
-        TODO("Not yet implemented")
-    }
+    override fun toMoveDetailsItemPage(result: FilmItem, addToBackStack: Boolean) = launchFragment(DetailsFragment(), true, result = result)
 
     override fun toBack(){
         supportFragmentManager.popBackStack()

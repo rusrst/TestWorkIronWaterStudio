@@ -4,10 +4,11 @@ package com.example.testworkironwaterstudio.fragments
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.testworkironwaterstudio.contract.Navigator
 import com.example.testworkironwaterstudio.data.FilmItem
 import com.example.testworkironwaterstudio.databinding.FilmItemBinding
 
-class FilmsAdapter: RecyclerView.Adapter<FilmsAdapter.FilmsViewHolder>()  {
+class FilmsAdapter(private val navigator: Navigator): RecyclerView.Adapter<FilmsAdapter.FilmsViewHolder>()  {
 
     var listOfFilms:List<FilmItem> = listOf()
         set(newValue) {
@@ -15,10 +16,14 @@ class FilmsAdapter: RecyclerView.Adapter<FilmsAdapter.FilmsViewHolder>()  {
             notifyDataSetChanged()
         }
 
-    class FilmsViewHolder(private val binding: FilmItemBinding): RecyclerView.ViewHolder(binding.root){
+    class FilmsViewHolder(
+        private val binding: FilmItemBinding,
+        private val navigator: Navigator,
+        private val listOfFilms:List<FilmItem>
+        ): RecyclerView.ViewHolder(binding.root){
         init {
             binding.itemRoot.setOnClickListener {
-                TODO()
+                navigator.toMoveDetailsItemPage(listOfFilms[adapterPosition])
             }
         }
         fun bind(item: FilmItem){
@@ -29,7 +34,7 @@ class FilmsAdapter: RecyclerView.Adapter<FilmsAdapter.FilmsViewHolder>()  {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilmsViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return FilmsViewHolder(FilmItemBinding.inflate(inflater, parent, false))
+        return FilmsViewHolder(FilmItemBinding.inflate(inflater, parent, false), navigator, listOfFilms)
     }
 
     override fun onBindViewHolder(holder: FilmsViewHolder, position: Int) {
