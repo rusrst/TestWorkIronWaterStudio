@@ -2,5 +2,7 @@
     <string name="app_name">TestWorkIronWaterStudio</string>
     <string name="try_later">Error! Please try again later</string>
     <string name="try_again">Try again</string>
-    <string name="about">ABOUT</string>
+    <string name="about">About the company</string>
+    <string name="company">Яндекс - найдется все</string>
+    <string name="reference">yandex.ru</string>
 </resources>

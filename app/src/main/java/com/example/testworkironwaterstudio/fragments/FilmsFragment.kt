@@ -51,14 +51,20 @@ class FilmsFragment : Fragment(), HasCustomTitle, HasInfoButton {
     }
 
     private fun initRecyclerView(savedInstanceState: Bundle?){
-        binding.recyclerViewList.layoutManager = LinearLayoutManager(requireContext())
-        adapter = FilmsAdapter()
-        binding.recyclerViewList.adapter = adapter
-         val listOfFilms = savedInstanceState?.getSerializable(INPUT_DATA) as ListOfFilm?
-        if (listOfFilms != null && listOfFilms.films.isNotEmpty()){
-            adapter.listOfFilms = listOfFilms.films
+        if (!this::adapter.isInitialized){
+            binding.recyclerViewList.layoutManager = LinearLayoutManager(requireContext())
+            adapter = FilmsAdapter()
+            binding.recyclerViewList.adapter = adapter
+            val listOfFilms = savedInstanceState?.getSerializable(INPUT_DATA) as ListOfFilm?
+            if (listOfFilms != null && listOfFilms.films.isNotEmpty()){
+                adapter.listOfFilms = listOfFilms.films
+            }
+            else initFilmsList()
         }
-        else initFilmsList()
+        else {
+            binding.recyclerViewList.layoutManager = LinearLayoutManager(requireContext())
+            binding.recyclerViewList.adapter = adapter
+        }
     }
 
     private fun initFilmsList() {

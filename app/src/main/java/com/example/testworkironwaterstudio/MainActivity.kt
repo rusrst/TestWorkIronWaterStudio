@@ -2,21 +2,15 @@ package com.example.testworkironwaterstudio
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.Gravity
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
-import android.widget.PopupMenu
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import com.example.testworkironwaterstudio.contract.*
 import com.example.testworkironwaterstudio.databinding.ActivityMainBinding
+import com.example.testworkironwaterstudio.fragments.AboutFragment
 import com.example.testworkironwaterstudio.fragments.FilmsFragment
 import java.io.Serializable
-import java.lang.IllegalArgumentException
 
 class MainActivity : AppCompatActivity(), Navigator, ActionUI {
 
@@ -52,16 +46,16 @@ class MainActivity : AppCompatActivity(), Navigator, ActionUI {
 
     private fun runWhenActive(action: () -> Unit) {
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
-            // activity is active -> just execute the action
             action()
         } else {
-            // activity is not active -> add action to queue
             actions += action
         }
     }
 
     override fun updateUi() {
         val currentFragment = supportFragmentManager.findFragmentById(idContainer)!!
+        binding.toolbar.setNavigationOnClickListener(null)
+        binding.toolbar.navigationIcon = null
         if (supportFragmentManager.backStackEntryCount > 0) {
             binding.toolbar.setNavigationIcon(R.drawable.ic_arrow_left)
             binding.toolbar.setNavigationOnClickListener {
@@ -70,12 +64,11 @@ class MainActivity : AppCompatActivity(), Navigator, ActionUI {
         }
         if (currentFragment is HasCustomTitle) binding.toolbar.title = currentFragment.getTitle()
         if (currentFragment is HasInfoButton){
-
             binding.toolbar.menu.clear()
             binding.toolbar.inflateMenu(R.menu.about_menu)
             val menuItem = binding.toolbar.menu.findItem(R.id.aboutMenu)
             menuItem.setOnMenuItemClickListener {
-
+                toMoveInfoCompanyPage()
                 return@setOnMenuItemClickListener true
             }
         } else {
@@ -83,24 +76,27 @@ class MainActivity : AppCompatActivity(), Navigator, ActionUI {
         }
     }
 
-    private fun launchFragment(fragment: Fragment, addToBackStack: Boolean = false, result: Any? = null, tag: String? = null){
-        if (result != null){
-            val bundle = Bundle()
-            bundle.putSerializable(ARG_STARTUP, result as Serializable) // WARNING, THIS CODE MUST BE SERIALIZABLE
-            fragment.arguments = bundle
+    private fun launchFragment(fragment: Fragment, addToBackStack: Boolean = false, result: Any? = null, tag: String? = null) {
+        runWhenActive {
+            if (result != null) {
+                val bundle = Bundle()
+                bundle.putSerializable(
+                    ARG_STARTUP,
+                    result as Serializable
+                )
+                fragment.arguments = bundle
+            }
+            val transaction = supportFragmentManager.beginTransaction()
+            if (addToBackStack) transaction.addToBackStack(null)
+            transaction
+                .replace(idContainer, fragment, tag)
+                .commit()
         }
-        val transaction = supportFragmentManager.beginTransaction()
-        if (addToBackStack) transaction.addToBackStack(null)
-        transaction
-            .replace(idContainer, fragment, tag)
-            .commit()
     }
 
     private fun toMoveListItem() = launchFragment(FilmsFragment())
 
-    override fun toMoveInfoCompanyPage(result: Any?, addToBackStack: Boolean) {
-        TODO("Not yet implemented")
-    }
+    override fun toMoveInfoCompanyPage(result: Any?, addToBackStack: Boolean) = launchFragment(AboutFragment(), true)
 
     override fun toMoveDetailsItemPage(result: Any?, addToBackStack: Boolean) {
         TODO("Not yet implemented")
